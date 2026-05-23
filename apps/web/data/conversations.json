@@ -1,0 +1,8 @@
+[
+  { "id": "m1", "name": "Sarah Wilson", "avatar": null, "lastMessage": "Perfect! I'll review the milestone and get back to you.", "lastTimestamp": "2m ago", "unread": 2, "online": true, "project": "SaaS Analytics Dashboard" },
+  { "id": "m2", "name": "Marcus Johnson", "avatar": null, "lastMessage": "Sounds good, let me know when you're free.", "lastTimestamp": "1h ago", "unread": 0, "online": false, "project": "AI Chatbot Integration" },
+  { "id": "m3", "name": "TechCorp Inc.", "avatar": null, "lastMessage": "The payment for milestone 3 has been released.", "lastTimestamp": "3h ago", "unread": 1, "online": false, "project": "E-Commerce Platform" },
+  { "id": "m4", "name": "Emily Rodriguez", "avatar": null, "lastMessage": "Deploy script is ready. Need you to review it.", "lastTimestamp": "Yesterday", "unread": 0, "online": true, "project": "Cloud Infrastructure Setup" },
+  { "id": "m5", "name": "James Kim", "avatar": null, "lastMessage": "Great working with you! Let's do another project.", "lastTimestamp": "2 days ago", "unread": 0, "online": false, "project": "Mobile App Redesign" },
+  { "id": "m6", "name": "Priya Patel", "avatar": null, "lastMessage": "I can start on Monday. Let me know the details.", "lastTimestamp": "3 days ago", "unread": 0, "online": false, "project": "Data Analytics Pipeline" }
+]

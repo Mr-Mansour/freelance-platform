@@ -1,0 +1,27 @@
+{
+  "name": "@cybrion/config",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/nextjs": "./tsconfig/nextjs.json",
+    "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
+    "./tsconfig/nest": "./tsconfig/nest.json",
+    "./tsconfig/nest.json": "./tsconfig/nest.json",
+    "./eslint/base": "./eslint/base.json",
+    "./eslint/base.json": "./eslint/base.json",
+    "./eslint/nextjs": "./eslint/nextjs.json",
+    "./eslint/nextjs.json": "./eslint/nextjs.json"
+  },
+  "files": [
+    "tsconfig/*.json",
+    "eslint/*.json"
+  ],
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0"
+  }
+}

@@ -1,0 +1,140 @@
+   ▲ Next.js 15.5.18
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.13:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 3.9s
+ ✓ Compiled /middleware in 466ms (132 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 6.9s (1839 modules)
+ GET / 200 in 8052ms
+ GET / 200 in 175ms
+ ✓ Compiled in 857ms (766 modules)
+ ✓ Compiled in 226ms (766 modules)
+ ✓ Compiled in 1704ms (884 modules)
+ ✓ Compiled in 683ms (884 modules)
+ ✓ Compiled in 656ms (884 modules)
+ ✓ Compiled in 569ms (884 modules)
+ ✓ Compiled in 643ms (884 modules)
+ ✓ Compiled in 548ms (884 modules)
+ ✓ Compiled in 222ms (766 modules)
+ ✓ Compiled in 225ms (766 modules)
+ ✓ Compiled in 216ms (766 modules)
+ ✓ Compiled in 210ms (766 modules)
+ ✓ Compiled in 15.8s (898 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 25s (1850 modules)
+ GET / 200 in 27058ms
+ ○ Compiling /sign-up/[[...sign-up]] ...
+ ✓ Compiled /sign-up/[[...sign-up]] in 9.3s (1979 modules)
+ ⨯ Error: useSession can only be used within the <ClerkProvider /> component.
+
+Possible fixes:
+1. Ensure that the <ClerkProvider /> is correctly wrapping your application where this component is used.
+2. Check for multiple versions of the `@clerk/shared` package in your project. Use a tool like `npm ls @clerk/shared` to identify multiple versions, and update your dependencies to only rely on one.
+
+Learn more: https://clerk.com/docs/components/clerk-provider
+    at SignUp (..\..\..\src\client-boundary\uiComponents.tsx:60:55)
+  58 |
+  59 | export const SignUp = (props: ComponentProps<typeof BaseSignUp>) => {
+> 60 |   return <BaseSignUp {...useEnforceCorrectRoutingProps('SignUp', props, false)} />;
+     |                                                       ^
+  61 | };
+  62 | {
+  digest: '3298809074'
+}
+ GET /sign-up 200 in 58019ms
+ GET / 200 in 319ms
+ ✓ Compiled in 2s (775 modules)
+ ✓ Compiled in 372ms (775 modules)
+ ✓ Compiled in 368ms (775 modules)
+ ✓ Compiled in 426ms (775 modules)
+ ✓ Compiled in 3.6s (893 modules)
+ ✓ Compiled in 690ms (893 modules)
+ ✓ Compiled in 556ms (893 modules)
+ ✓ Compiled in 505ms (893 modules)
+ ✓ Compiled in 609ms (893 modules)
+ ✓ Compiled in 606ms (893 modules)
+ ✓ Compiled in 736ms (893 modules)
+ ✓ Compiled in 719ms (893 modules)
+ ✓ Compiled in 636ms (907 modules)
+ ✓ Compiled in 913ms (893 modules)
+ ✓ Compiled in 735ms (893 modules)
+ ✓ Compiled in 647ms (907 modules)
+ ✓ Compiled in 532ms (893 modules)
+ ✓ Compiled in 695ms (893 modules)
+ ✓ Compiled in 815ms (893 modules)
+ ✓ Compiled in 488ms (775 modules)
+ ✓ Compiled in 291ms (775 modules)
+ ✓ Compiled in 327ms (775 modules)
+ ✓ Compiled in 402ms (775 modules)
+ ✓ Compiled in 229ms (775 modules)
+ ✓ Compiled in 306ms (775 modules)
+ ✓ Compiled in 342ms (775 modules)
+ ✓ Compiled in 245ms (775 modules)
+ ✓ Compiled in 327ms (775 modules)
+ ✓ Compiled in 304ms (775 modules)
+ ✓ Compiled in 313ms (775 modules)
+ ✓ Compiled in 343ms (775 modules)
+ ✓ Compiled in 375ms (775 modules)
+ ✓ Compiled in 295ms (775 modules)
+ ✓ Compiled in 239ms (775 modules)
+ ✓ Compiled in 289ms (775 modules)
+ ✓ Compiled in 327ms (775 modules)
+ ✓ Compiled in 321ms (775 modules)
+ ✓ Compiled in 290ms (775 modules)
+ ✓ Compiled in 1412ms (775 modules)
+ ✓ Compiled in 330ms (775 modules)
+ ✓ Compiled in 412ms (775 modules)
+ ✓ Compiled in 449ms (775 modules)
+ ✓ Compiled in 525ms (775 modules)
+ ✓ Compiled in 600ms (775 modules)
+ ✓ Compiled in 527ms (775 modules)
+ ✓ Compiled in 364ms (775 modules)
+ ✓ Compiled in 448ms (775 modules)
+ ✓ Compiled in 431ms (775 modules)
+ ✓ Compiled in 348ms (775 modules)
+ ✓ Compiled in 275ms (775 modules)
+ ○ Compiling /api/messages ...
+ ✓ Compiled /api/messages in 7.1s (912 modules)
+ GET /api/proposals 200 in 9054ms
+ GET /api/messages 200 in 9038ms
+ GET /api/dashboard 200 in 9163ms
+ GET /api/dashboard 200 in 405ms
+ GET /api/dashboard 200 in 327ms
+ ○ Compiling /api/jobs ...
+ ✓ Compiled /api/jobs in 776ms (928 modules)
+ GET /api/jobs 200 in 1338ms
+ ✓ Compiled /api/freelancers in 377ms (916 modules)
+ GET /api/freelancers 200 in 772ms
+ ○ Compiling / ...
+ ✓ Compiled / in 10s (1091 modules)
+ GET / 200 in 15303ms
+ GET / 200 in 11615ms
+ ○ Compiling /messages ...
+ ✓ Compiled /messages in 6.4s (1891 modules)
+ ○ Compiling /proposals ...
+ ✓ Compiled /proposals in 1785ms (1900 modules)
+ GET /proposals 200 in 3022ms
+ ○ Compiling /contracts ...
+ ✓ Compiled /contracts in 2.2s (1917 modules)
+ GET /contracts 200 in 2585ms
+ ○ Compiling /jobs ...
+ ✓ Compiled /jobs in 998ms (1934 modules)
+ GET /jobs 200 in 1310ms
+ ○ Compiling /settings ...
+ ✓ Compiled /settings in 1897ms (1961 modules)
+ GET /settings 200 in 2159ms
+ ○ Compiling /notifications ...
+ ✓ Compiled /notifications in 1229ms (1974 modules)
+ GET /notifications 200 in 1701ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 1221ms (2000 modules)
+ GET /dashboard 200 in 1549ms
+ ○ Compiling /marketplace ...
+ ✓ Compiled /marketplace in 1524ms (2018 modules)
+ GET /marketplace 200 in 1996ms
+ GET / 200 in 302ms
+ GET / 200 in 257ms
+ GET / 200 in 147ms

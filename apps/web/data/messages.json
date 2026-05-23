@@ -1,0 +1,26 @@
+{
+  "m1": [
+    { "senderId": "them", "text": "Hey Alex, I've reviewed the latest milestone. Great work!", "timestamp": "10:32 AM", "status": "read" },
+    { "senderId": "me", "text": "Thanks Sarah! Glad you like it. I've already started on the next set of features.", "timestamp": "10:35 AM", "status": "read" },
+    { "senderId": "them", "text": "Perfect! I'll review the milestone and get back to you.", "timestamp": "10:38 AM", "status": "read" },
+    { "senderId": "them", "text": "Also, could we add a dark mode toggle?", "timestamp": "10:39 AM", "status": "delivered" }
+  ],
+  "m2": [
+    { "senderId": "me", "text": "Hey Marcus, are you available for a quick call about the API integration?", "timestamp": "12:15 PM", "status": "read" },
+    { "senderId": "them", "text": "Sure, I'm free after 3pm today.", "timestamp": "12:45 PM", "status": "read" },
+    { "senderId": "me", "text": "Sounds good, let me know when you're free.", "timestamp": "12:50 PM", "status": "read" }
+  ],
+  "m3": [
+    { "senderId": "them", "text": "The payment for milestone 3 has been released.", "timestamp": "8:00 AM", "status": "delivered" }
+  ],
+  "m4": [
+    { "senderId": "them", "text": "Deploy script is ready. Need you to review it.", "timestamp": "4:20 PM", "status": "read" },
+    { "senderId": "me", "text": "On it! I'll check it out tonight.", "timestamp": "5:00 PM", "status": "read" }
+  ],
+  "m5": [
+    { "senderId": "them", "text": "Great working with you! Let's do another project.", "timestamp": "2:30 PM", "status": "read" }
+  ],
+  "m6": [
+    { "senderId": "them", "text": "I can start on Monday. Let me know the details.", "timestamp": "11:00 AM", "status": "read" }
+  ]
+}

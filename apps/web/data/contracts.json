@@ -1,0 +1,7 @@
+[
+  { "id": "c1", "title": "Build a Full-Stack SaaS Analytics Dashboard", "clientName": "Sarah Wilson", "amount": 7500, "escrowStatus": "FUNDED", "status": "ACTIVE", "progress": 50, "totalMilestones": 4, "completedMilestones": 2, "startDate": "Jan 15, 2026", "endDate": "Mar 30, 2026" },
+  { "id": "c2", "title": "E-Commerce Platform Migration", "clientName": "TechCorp Inc.", "amount": 12000, "escrowStatus": "FUNDED", "status": "ACTIVE", "progress": 75, "totalMilestones": 4, "completedMilestones": 3, "startDate": "Dec 1, 2025", "endDate": "Mar 1, 2026" },
+  { "id": "c3", "title": "Mobile Banking App UI Design", "clientName": "Emily Rodriguez", "amount": 3500, "escrowStatus": "PENDING", "status": "COMPLETED", "progress": 100, "totalMilestones": 3, "completedMilestones": 3, "startDate": "Oct 10, 2025", "endDate": "Jan 10, 2026" },
+  { "id": "c4", "title": "AI-Powered Chatbot Development", "clientName": "Marcus Johnson", "amount": 5000, "escrowStatus": "FUNDED", "status": "ACTIVE", "progress": 25, "totalMilestones": 4, "completedMilestones": 1, "startDate": "Feb 1, 2026", "endDate": "Apr 15, 2026" },
+  { "id": "c5", "title": "Data Analytics Pipeline Architecture", "clientName": "Priya Patel", "amount": 9500, "escrowStatus": "FUNDED", "status": "ACTIVE", "progress": 10, "totalMilestones": 5, "completedMilestones": 0, "startDate": "Feb 20, 2026", "endDate": "May 20, 2026" }
+]
