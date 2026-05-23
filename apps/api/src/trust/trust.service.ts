@@ -127,7 +127,7 @@ export class TrustService {
 
     if (contracts.length === 0) return 0
 
-    const completed = contracts.filter(c => c.status === 'COMPLETED').length
+    const completed = contracts.filter((c: any) => c.status === 'COMPLETED').length
     return Math.round((completed / contracts.length) * 100)
   }
 
@@ -159,9 +159,9 @@ export class TrustService {
     if (contracts.length < 2) return 50
 
     // Check for repeat clients
-    const clientIds = [...new Set(contracts.map(c => c.clientId))]
+    const clientIds = [...new Set(contracts.map((c: any) => c.clientId))]
     const repeatClients = clientIds.filter(
-      id => contracts.filter(c => c.clientId === id).length > 1
+      id => contracts.filter((c: any) => c.clientId === id).length > 1
     ).length
 
     return Math.round((repeatClients / clientIds.length) * 100)
