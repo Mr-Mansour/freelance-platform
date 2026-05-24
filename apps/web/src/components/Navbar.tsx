@@ -46,15 +46,15 @@ const ROLE_SUGGESTIONS = [
 const APP_LINKS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/jobs', label: 'Find Work', icon: Briefcase },
-  { href: '/marketplace', label: 'Freelancers', icon: User },
+  { href: '/freelancers', label: 'Freelancers', icon: User },
   { href: '/messages', label: 'Messages', icon: MessageCircle },
   { href: '/proposals', label: 'Proposals', icon: FileText },
 ]
 
 const LANDING_LINKS = [
-  { href: '#features', label: 'Features', icon: Sparkles },
-  { href: '#how-it-works', label: 'How It Works', icon: Info },
-  { href: '#pricing', label: 'Pricing', icon: DollarSign },
+  { href: '/freelancers', label: 'Find Freelancers', icon: User },
+  { href: '/jobs', label: 'Browse Jobs', icon: Briefcase },
+  { href: '/how-it-works', label: 'How It Works', icon: Info },
 ]
 
 export default function Navbar() {

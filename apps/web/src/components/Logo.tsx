@@ -1,11 +1,17 @@
+'use client'
+
+import dynamic from 'next/dynamic'
+
+const Logo3D = dynamic(() => import('@/components/Logo3D'), { ssr: false })
+
 export default function Logo({ size = 'default', showText = true, variant = 'default' }: { size?: 'sm' | 'default' | 'lg'; showText?: boolean; variant?: 'default' | 'admin' }) {
-  const sizeMap = { sm: 'w-7 h-7 text-sm', default: 'w-9 h-9 text-lg', lg: 'w-12 h-12 text-xl' }
-  const textSizeMap = { sm: 'text-lg', default: 'text-xl', lg: 'text-2xl' }
+  const canvasSize = size === 'sm' ? 28 : size === 'lg' ? 48 : 36
 
   if (variant === 'admin') {
+    const cls = size === 'sm' ? 'w-7 h-7' : size === 'lg' ? 'w-12 h-12' : 'w-9 h-9'
     return (
       <div className="flex items-center justify-center">
-        <div className={`${sizeMap[size]} rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/20 relative overflow-hidden`}>
+        <div className={`${cls} rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/20 relative overflow-hidden`}>
           <svg viewBox="0 0 36 36" className="absolute inset-0 w-full h-full">
             <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
             <circle cx="18" cy="18" r="10" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
@@ -20,19 +26,13 @@ export default function Logo({ size = 'default', showText = true, variant = 'def
     )
   }
 
+  const textCls = size === 'sm' ? 'text-lg' : size === 'lg' ? 'text-2xl' : 'text-xl'
+
   return (
     <a href="/" className="flex items-center gap-2.5 group">
-      <div className={`${sizeMap[size]} rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/30 transition-all relative overflow-hidden`}>
-        <svg viewBox="0 0 36 36" className="absolute inset-0 w-full h-full opacity-30">
-          <circle cx="18" cy="18" r="16" fill="none" stroke="white" strokeWidth="0.5" />
-          <circle cx="18" cy="18" r="10" fill="none" stroke="white" strokeWidth="0.3" />
-          <path d="M18 2 L20 8 L16 8 Z" fill="rgba(255,255,255,0.15)" />
-          <path d="M18 34 L20 28 L16 28 Z" fill="rgba(255,255,255,0.15)" />
-        </svg>
-        <span className="relative font-bold text-white">C</span>
-      </div>
+      <Logo3D size={canvasSize} />
       {showText && (
-        <span className={`${textSizeMap[size]} font-bold text-white`}>
+        <span className={`${textCls} font-bold text-white`}>
           Cybr<span className="text-cyan-400">ion</span>
         </span>
       )}

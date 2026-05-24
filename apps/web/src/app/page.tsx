@@ -22,6 +22,7 @@ import {
   DollarSign,
   MapPin,
 } from 'lucide-react'
+import Logo3D from '@/components/Logo3D'
 
 const DEFAULT_STATS = [
   { label: 'Active Freelancers', value: '50K+', icon: Users },
@@ -136,9 +137,9 @@ const LEGAL_SLUGS: Record<string, string> = {
 }
 
 const footerLinks: Record<string, ({ label: string; href: string })[]> = {
-  platform: ['Browse Jobs', 'Browse Freelancers', 'Categories', 'How It Works', 'Trust & Safety'].map(l => ({ label: l, href: '#' })),
-  company: ['About Us', 'Careers', 'Blog', 'Press Kit', 'Contact'].map(l => ({ label: l, href: '#' })),
-  resources: ['Help Center', 'Community', 'Tutorials', 'API Docs', 'Status'].map(l => ({ label: l, href: '#' })),
+  platform: [{ label: 'Browse Jobs', href: '/jobs' }, { label: 'Browse Freelancers', href: '/freelancers' }, { label: 'How It Works', href: '/how-it-works' }, { label: 'Trust & Safety', href: '#' }],
+  company: [{ label: 'About Us', href: '/about' }, { label: 'Contact', href: '/contact' }],
+  resources: [{ label: 'Help Center', href: '#' }, { label: 'Community', href: '#' }],
   legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'GDPR', 'DPA'].map(l => ({ label: l, href: LEGAL_SLUGS[l] || '#' })),
 }
 
@@ -181,6 +182,10 @@ function HeroSection() {
           >
             <Sparkles className="w-4 h-4" />
             <span>Premium Freelance Marketplace</span>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.05 }} className="flex justify-center mb-6">
+            <Logo3D size={140} />
           </motion.div>
 
         <motion.h1
