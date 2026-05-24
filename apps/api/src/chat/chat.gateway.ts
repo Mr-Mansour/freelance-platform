@@ -16,7 +16,7 @@ import { ChatService } from './chat.service'
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
-  server: Server
+  server!: Server
 
   private userSockets = new Map<string, string[]>()
 
