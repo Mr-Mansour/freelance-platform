@@ -55,13 +55,6 @@ cd apps/web
 pnpm dev
 ```
 
-The app will be available at `http://localhost:3000`.
-
-### Owner Login
-
-- **Username:** `Qan` or `owner`
-- **Password:** `TachOWNER159357`
-
 ## Project Structure
 
 ```
@@ -95,11 +88,6 @@ The web app is configured for Vercel deployment via `vercel.json`:
 # - Install: pnpm install
 # - Output: apps/web/.next
 ```
-
-1. Push to GitHub
-2. Import repo at [vercel.com/new](https://vercel.com/new)
-3. Leave Root Directory blank (uses monorepo root)
-4. Deploy
 
 ## Admin Sections
 
