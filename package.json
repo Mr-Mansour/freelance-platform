@@ -15,11 +15,6 @@
     "db:seed": "pnpm --filter @cybrion/database seed",
     "db:studio": "pnpm --filter @cybrion/database studio"
   },
-  "dependencies": {
-    "next": "^15.1.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
   "devDependencies": {
     "@cybrion/types": "workspace:*",
     "@cybrion/config": "workspace:*",
