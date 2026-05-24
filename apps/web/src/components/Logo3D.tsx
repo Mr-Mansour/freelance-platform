@@ -10,6 +10,7 @@ export default function Logo3D({ size = 200 }: { size?: number }) {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+    const c = ctx
 
     let animId: number
     const cx = size / 2
@@ -47,7 +48,7 @@ export default function Logo3D({ size = 200 }: { size?: number }) {
     }
 
     function draw() {
-      ctx.clearRect(0, 0, size, size)
+      c.clearRect(0, 0, size, size)
 
       angle += 0.008
 
@@ -68,57 +69,57 @@ export default function Logo3D({ size = 200 }: { size?: number }) {
         }
       }
 
-      ctx.strokeStyle = 'rgba(6, 182, 212, 0.15)'
-      ctx.lineWidth = 1
+      c.strokeStyle = 'rgba(6, 182, 212, 0.15)'
+      c.lineWidth = 1
       for (let i = 0; i <= steps; i++) {
-        ctx.beginPath()
+        c.beginPath()
         for (let j = 0; j <= vSteps; j++) {
           const idx = i * (vSteps + 1) + j
-          if (j === 0) ctx.moveTo(points[idx].x, points[idx].y)
-          else ctx.lineTo(points[idx].x, points[idx].y)
+          if (j === 0) c.moveTo(points[idx].x, points[idx].y)
+          else c.lineTo(points[idx].x, points[idx].y)
         }
-        ctx.stroke()
+        c.stroke()
       }
       for (let j = 0; j <= vSteps; j++) {
-        ctx.beginPath()
+        c.beginPath()
         for (let i = 0; i <= steps; i++) {
           const idx = i * (vSteps + 1) + j
-          if (i === 0) ctx.moveTo(points[idx].x, points[idx].y)
-          else ctx.lineTo(points[idx].x, points[idx].y)
+          if (i === 0) c.moveTo(points[idx].x, points[idx].y)
+          else c.lineTo(points[idx].x, points[idx].y)
         }
-        ctx.stroke()
+        c.stroke()
       }
 
-      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.22)
+      const glow = c.createRadialGradient(cx, cy, 0, cx, cy, size * 0.22)
       glow.addColorStop(0, 'rgba(6, 182, 212, 0.12)')
       glow.addColorStop(0.5, 'rgba(6, 182, 212, 0.04)')
       glow.addColorStop(1, 'rgba(6, 182, 212, 0)')
-      ctx.fillStyle = glow
-      ctx.beginPath()
-      ctx.arc(cx, cy, size * 0.22, 0, Math.PI * 2)
-      ctx.fill()
+      c.fillStyle = glow
+      c.beginPath()
+      c.arc(cx, cy, size * 0.22, 0, Math.PI * 2)
+      c.fill()
 
-      ctx.font = `bold ${size * 0.35}px -apple-system, BlinkMacSystemFont, sans-serif`
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
+      c.font = `bold ${size * 0.35}px -apple-system, BlinkMacSystemFont, sans-serif`
+      c.textAlign = 'center'
+      c.textBaseline = 'middle'
 
-      ctx.shadowColor = 'rgba(6, 182, 212, 0.6)'
-      ctx.shadowBlur = 20
-      const grad = ctx.createLinearGradient(cx - 20, cy - 20, cx + 20, cy + 20)
+      c.shadowColor = 'rgba(6, 182, 212, 0.6)'
+      c.shadowBlur = 20
+      const grad = c.createLinearGradient(cx - 20, cy - 20, cx + 20, cy + 20)
       grad.addColorStop(0, '#22d3ee')
       grad.addColorStop(0.5, '#fff')
       grad.addColorStop(1, '#3b82f6')
-      ctx.fillStyle = grad
-      ctx.fillText('C', cx, cy + 2)
+      c.fillStyle = grad
+      c.fillText('C', cx, cy + 2)
 
-      ctx.shadowBlur = 40
-      ctx.shadowColor = 'rgba(6, 182, 212, 0.3)'
-      ctx.fillStyle = 'rgba(6, 182, 212, 0.08)'
-      ctx.fillText('C', cx, cy + 2)
+      c.shadowBlur = 40
+      c.shadowColor = 'rgba(6, 182, 212, 0.3)'
+      c.fillStyle = 'rgba(6, 182, 212, 0.08)'
+      c.fillText('C', cx, cy + 2)
 
-      ctx.shadowBlur = 0
-      ctx.fillStyle = grad
-      ctx.fillText('C', cx, cy + 2)
+      c.shadowBlur = 0
+      c.fillStyle = grad
+      c.fillText('C', cx, cy + 2)
 
       animId = requestAnimationFrame(draw)
     }
