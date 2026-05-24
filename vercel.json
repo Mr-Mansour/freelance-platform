@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "pnpm --filter @cybrion/web build",
+  "buildCommand": "npx turbo build --filter=@cybrion/web",
   "installCommand": "pnpm install",
   "outputDirectory": "apps/web/.next"
 }
