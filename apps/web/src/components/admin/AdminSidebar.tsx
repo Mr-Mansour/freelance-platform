@@ -18,6 +18,7 @@ const NAV_ITEMS: { href: string; label: string; icon: string; section: AdminSect
   { href: '/admin/pages', label: 'Pages', icon: '📄', section: 'pages' },
   { href: '/admin/disputes', label: 'Disputes', icon: '⚖️', section: 'disputes' },
   { href: '/admin/moderation', label: 'Moderation', icon: '🚩', section: 'moderation' },
+  { href: '/admin/email-log', label: 'Email Log', icon: '📧', section: 'analytics' },
   { href: '/admin/access', label: 'Access', icon: '🔐', section: 'access' },
 ]
 

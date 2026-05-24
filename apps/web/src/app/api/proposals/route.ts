@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { notifyAndEmail } from '@/lib/store'
 
 let PROPOSALS: any[] = [
   { id: 'p1', jobTitle: 'Build a Full-Stack SaaS Analytics Dashboard', clientName: 'Sarah Wilson', clientAvatar: null, bidAmount: 7500, duration: '10 weeks', status: 'VIEWED', submittedAt: '2 days ago', matchScore: 94, clientRating: 4.8 },
@@ -34,5 +35,11 @@ export async function POST(request: Request) {
   const body = await request.json()
   const proposal = { id: `p_${Date.now()}`, ...body, status: 'PENDING', submittedAt: 'Just now' }
   PROPOSALS.unshift(proposal)
+  notifyAndEmail(
+    'current-user', 'client@example.com', 'proposal',
+    `Proposal submitted for $${body.bidAmount}`,
+    'Proposal Submitted', `Your proposal for $${body.bidAmount} has been submitted.`,
+    proposal.id,
+  )
   return NextResponse.json(proposal, { status: 201 })
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getContracts, addContract, addPlatformEvent } from '@/lib/store'
+import { getContracts, addContract, addPlatformEvent, notifyAndEmail } from '@/lib/store'
 import type { Contract } from '@/lib/store'
 
 export async function GET(request: NextRequest) {
@@ -56,5 +56,11 @@ export async function POST(request: Request) {
     amount: contract.amount,
     createdAt: new Date().toISOString(),
   })
+  notifyAndEmail(
+    contract.freelancerId || 'current-user', 'client@example.com', 'contract',
+    `New contract: "${contract.title}" for $${contract.amount}`,
+    'New Contract Created', `You have a new contract: ${contract.title} for $${contract.amount}`,
+    contract.id,
+  )
   return NextResponse.json(contract, { status: 201 })
 }

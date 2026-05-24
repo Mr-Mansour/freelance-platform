@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getJobs, addJob } from '@/lib/store'
+import { getJobs, addJob, notifyAndEmail } from '@/lib/store'
 import type { Job } from '@/lib/store'
 
 export async function GET(request: NextRequest) {
@@ -73,5 +73,11 @@ export async function POST(request: Request) {
     budgetMax: body.budgetMax ? Number(body.budgetMax) : undefined,
   }
   addJob(job)
+  notifyAndEmail(
+    'current-user', 'client@example.com', 'job',
+    `Job posted: "${job.title}"`,
+    'Job Posted Successfully', `Your job "${job.title}" has been posted.`,
+    job.id,
+  )
   return NextResponse.json(job, { status: 201 })
 }

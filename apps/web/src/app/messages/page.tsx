@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
@@ -71,8 +71,42 @@ export default function MessagesPage() {
     setMessagesLoading(true)
     fetch(`/api/messages/${selectedConversation}`)
       .then(r => r.json())
-      .then(d => { setMessages(d); setMessagesLoading(false) })
+      .then(d => {
+        const msgs = d.messages || d
+        setMessages(msgs)
+        if (msgs.length > 0) {
+          latestTimestampRef.current = msgs[msgs.length - 1].timestamp
+        }
+        setMessagesLoading(false)
+      })
       .catch(() => setMessagesLoading(false))
+  }, [selectedConversation])
+
+  const latestTimestampRef = useRef('')
+
+  // Poll for new messages every 3 seconds
+  useEffect(() => {
+    if (!selectedConversation) return
+    const interval = setInterval(async () => {
+      const since = latestTimestampRef.current
+      try {
+        const res = await fetch(`/api/messages/${selectedConversation}?since=${encodeURIComponent(since)}`)
+        const data = await res.json()
+        if (data.messages && data.messages.length > 0) {
+          setMessages(prev => {
+            const existingIds = new Set(prev.map(m => m.timestamp + m.text))
+            const newMsgs = data.messages.filter((m: any) => !existingIds.has(m.timestamp + m.text))
+            if (newMsgs.length > 0) {
+              const last = newMsgs[newMsgs.length - 1]
+              latestTimestampRef.current = last.timestamp
+              return [...prev, ...newMsgs]
+            }
+            return prev
+          })
+        }
+      } catch {}
+    }, 3000)
+    return () => clearInterval(interval)
   }, [selectedConversation])
 
   const filteredConversations = conversations.filter(c =>

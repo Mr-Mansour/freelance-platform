@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
@@ -47,11 +47,22 @@ export default function Navbar() {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [pathname, setPathname] = useState('/')
+  const [unreadNotifs, setUnreadNotifs] = useState(0)
   const userMenuRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLDivElement>(null)
 
+  const fetchUnread = useCallback(() => {
+    fetch('/api/notifications?filter=unread')
+      .then(r => r.json())
+      .then(d => setUnreadNotifs(d.unreadCount || 0))
+      .catch(() => {})
+  }, [])
+
   useEffect(() => {
     setPathname(window.location.pathname)
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 10000)
+    return () => clearInterval(interval)
     const onScroll = () => setScrolled(window.scrollY > 10)
     const onClick = (e: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
@@ -219,7 +230,11 @@ export default function Navbar() {
               <>
                 <a href="/notifications" className="relative p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-all">
                   <Bell className="w-5 h-5" />
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500" />
+                  {unreadNotifs > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center">
+                      {unreadNotifs > 9 ? '9+' : unreadNotifs}
+                    </span>
+                  )}
                 </a>
 
                 <div className="relative" ref={userMenuRef}>

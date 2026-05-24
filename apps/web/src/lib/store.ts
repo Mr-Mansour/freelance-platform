@@ -179,6 +179,69 @@ export function addFile(f: FileRecord): void {
   writeJson('files.json', all)
 }
 
+// ─── Notifications ────────────────────────────────────────────
+
+export type AppNotification = {
+  id: string; userId: string; type: string; text: string
+  read: boolean; actionable: boolean; relatedId?: string
+  createdAt: string
+}
+
+export function getNotifications(userId?: string): AppNotification[] {
+  const all = readJson<AppNotification[]>('notifications.json', [])
+  if (userId) return all.filter(n => n.userId === userId)
+  return all
+}
+
+export function addNotification(n: AppNotification): void {
+  const all = getNotifications()
+  all.push(n)
+  writeJson('notifications.json', all)
+}
+
+export function markNotificationRead(id: string): void {
+  const all = getNotifications()
+  const idx = all.findIndex(n => n.id === id)
+  if (idx !== -1) { all[idx].read = true; writeJson('notifications.json', all) }
+}
+
+export function markAllNotificationsRead(userId: string): void {
+  const all = getNotifications()
+  all.forEach(n => { if (n.userId === userId) n.read = true })
+  writeJson('notifications.json', all)
+}
+
+// ─── Email Log ─────────────────────────────────────────────────
+
+export type EmailLog = {
+  id: string; to: string; subject: string; body: string
+  status: 'sent' | 'failed'; sentAt: string; type: string
+}
+
+export function getEmailLog(): EmailLog[] {
+  return readJson<EmailLog[]>('email_log.json', [])
+}
+
+export function addEmailLog(e: EmailLog): void {
+  const all = getEmailLog()
+  all.push(e)
+  writeJson('email_log.json', all)
+}
+
+// Helper: create notification + email log
+export function notifyAndEmail(userId: string, toEmail: string, type: string, text: string, subject: string, body: string, relatedId?: string) {
+  addNotification({
+    id: `not${Date.now()}${Math.random().toString(36).slice(2, 6)}`,
+    userId, type, text, read: false, actionable: true, relatedId,
+    createdAt: new Date().toISOString(),
+  })
+  addEmailLog({
+    id: `eml${Date.now()}`,
+    to: toEmail, subject, body,
+    status: 'sent', sentAt: new Date().toISOString(), type,
+  })
+}
+
 // ─── Platform Events (analytics) ───────────────────────────────
 
 export function getPlatformEvents(): PlatformEvent[] {
