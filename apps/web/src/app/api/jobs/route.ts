@@ -7,6 +7,9 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get('search')?.toLowerCase()
   const category = searchParams.get('category')
   const level = searchParams.get('level')
+  const status = searchParams.get('status')
+  const budgetMin = searchParams.get('budgetMin')
+  const budgetMax = searchParams.get('budgetMax')
 
   let result = getJobs()
 
@@ -20,12 +23,27 @@ export async function GET(request: NextRequest) {
 
   if (category && category !== 'All') {
     result = result.filter(j =>
-      j.skills.some(s => s.toLowerCase().includes(category.toLowerCase()))
+      j.skills.some(s => s.toLowerCase().includes(category.toLowerCase())) ||
+      j.category?.toLowerCase() === category.toLowerCase()
     )
   }
 
   if (level && level !== 'All Levels') {
     result = result.filter(j => j.experienceLevel === level)
+  }
+
+  if (status && status !== 'All') {
+    result = result.filter(j => j.status === status)
+  }
+
+  if (budgetMin) {
+    const min = parseInt(budgetMin)
+    result = result.filter(j => (j.budgetMin || 0) >= min)
+  }
+
+  if (budgetMax) {
+    const max = parseInt(budgetMax)
+    result = result.filter(j => (j.budgetMax || Infinity) <= max)
   }
 
   return NextResponse.json(result)
@@ -49,6 +67,10 @@ export async function POST(request: Request) {
     postedAt: 'Just now',
     clientRating: 0,
     clientHires: 0,
+    category: body.category || 'Web Development',
+    status: 'open',
+    budgetMin: body.budgetMin ? Number(body.budgetMin) : undefined,
+    budgetMax: body.budgetMax ? Number(body.budgetMax) : undefined,
   }
   addJob(job)
   return NextResponse.json(job, { status: 201 })

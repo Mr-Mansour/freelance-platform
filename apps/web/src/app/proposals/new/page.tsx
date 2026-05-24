@@ -25,7 +25,8 @@ export default function NewProposalPage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [files, setFiles] = useState<string[]>([])
+  const [attachedFiles, setAttachedFiles] = useState<{ name: string; url: string; type: string }[]>([])
+  const [uploading, setUploading] = useState(false)
   const [aiGenerated, setAiGenerated] = useState(false)
 
   const handleAiGenerate = async () => {
@@ -211,11 +212,43 @@ Alex Chen`)
               {/* File Attachments */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Attachments (Optional)</label>
-                <div className="border-2 border-dashed border-gray-800 rounded-xl p-8 text-center hover:border-gray-700 transition-colors cursor-pointer">
-                  <Paperclip className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">Drop files here or click to upload</p>
+                {attachedFiles.length > 0 && (
+                  <div className="space-y-2 mb-3">
+                    {attachedFiles.map((f, i) => (
+                      <div key={i} className="flex items-center gap-2 p-2 rounded-lg bg-gray-800/50 border border-gray-700">
+                        <Paperclip className="w-4 h-4 text-cyan-400" />
+                        <span className="text-sm text-gray-300 flex-1 truncate">{f.name}</span>
+                        <button onClick={() => setAttachedFiles(prev => prev.filter((_, j) => j !== i))}
+                          className="text-gray-500 hover:text-red-400 transition-colors">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <label className="border-2 border-dashed border-gray-800 rounded-xl p-8 text-center hover:border-gray-700 transition-colors cursor-pointer block">
+                  <input type="file" className="hidden" onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    setUploading(true)
+                    const formData = new FormData()
+                    formData.append('file', file)
+                    try {
+                      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+                      const data = await res.json()
+                      setAttachedFiles(prev => [...prev, { name: data.name, url: data.url, type: data.type }])
+                    } catch {}
+                    setUploading(false)
+                    e.target.value = ''
+                  }} />
+                  {uploading ? (
+                    <Loader2 className="w-8 h-8 text-gray-600 mx-auto mb-2 animate-spin" />
+                  ) : (
+                    <Paperclip className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                  )}
+                  <p className="text-sm text-gray-500">{uploading ? 'Uploading...' : 'Drop files here or click to upload'}</p>
                   <p className="text-xs text-gray-600 mt-1">PDF, images, zip files (max 10MB)</p>
-                </div>
+                </label>
               </div>
 
               {/* Submit */}

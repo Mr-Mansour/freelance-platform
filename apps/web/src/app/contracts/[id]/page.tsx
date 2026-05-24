@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   CheckCircle,
   Circle,
@@ -20,6 +20,8 @@ import {
   MoreHorizontal,
   Lock,
   Unlock,
+  Star,
+  X,
 } from 'lucide-react'
 
 const MOCK_CONTRACT = {
@@ -93,6 +95,11 @@ const STATUS_STYLES: Record<string, { label: string; color: string; bg: string }
 
 export default function ContractDetailPage() {
   const [loading, setLoading] = useState(true)
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [reviewRating, setReviewRating] = useState(5)
+  const [reviewContent, setReviewContent] = useState('')
+  const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const contract = MOCK_CONTRACT
 
   useEffect(() => {
@@ -320,12 +327,102 @@ export default function ContractDetailPage() {
             <FileText className="w-4 h-4" />
             Request Changes
           </button>
+          <button onClick={() => setShowReviewModal(true)}
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 font-medium transition-all">
+            <Star className="w-4 h-4" />
+            {reviewSubmitted ? 'Review Submitted' : 'Leave a Review'}
+          </button>
           <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-700 hover:border-red-500/50 text-gray-300 hover:text-red-400 font-medium transition-all ml-auto">
             <AlertCircle className="w-4 h-4" />
             Report Issue
           </button>
         </motion.div>
       </div>
+
+      {/* Review Modal */}
+      <AnimatePresence>
+        {showReviewModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+            onClick={() => setShowReviewModal(false)}>
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
+              onClick={e => e.stopPropagation()}
+              className="w-full max-w-md rounded-2xl border border-gray-800 bg-gray-900 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-white">Leave a Review</h2>
+                <button onClick={() => setShowReviewModal(false)} className="text-gray-500 hover:text-white transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {reviewSubmitted ? (
+                <div className="text-center py-8">
+                  <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+                  <p className="text-white font-medium mb-1">Review Submitted!</p>
+                  <p className="text-sm text-gray-500">Thank you for your feedback.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="text-center mb-6">
+                    <p className="text-sm text-gray-400 mb-3">Rate your experience with {contract.freelancer.name}</p>
+                    <div className="flex items-center justify-center gap-2">
+                      {[1, 2, 3, 4, 5].map(r => (
+                        <button key={r} onClick={() => setReviewRating(r)}
+                          className="transition-all hover:scale-110">
+                          <Star className={`w-8 h-8 ${r <= reviewRating ? 'fill-yellow-500 text-yellow-500' : 'text-gray-700'}`} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-sm text-gray-400 mb-2">Your Review</label>
+                    <textarea value={reviewContent} onChange={e => setReviewContent(e.target.value)}
+                      rows={4} placeholder="Share your experience working on this project..."
+                      className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500/50 resize-y" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    {['Communication', 'Quality', 'Timeliness', 'Expertise'].map(cat => (
+                      <div key={cat} className="p-3 rounded-lg bg-gray-800/50">
+                        <p className="text-xs text-gray-400 mb-1">{cat}</p>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map(r => (
+                            <button key={r} className={`w-4 h-4 rounded-full ${r <= 4 ? 'bg-yellow-500' : 'bg-gray-700'}`} />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button onClick={async () => {
+                    setSubmitting(true)
+                    await fetch('/api/reviews', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        contractId: contract.id,
+                        reviewerId: 'current-user',
+                        reviewerName: 'You',
+                        revieweeId: contract.freelancer.name,
+                        revieweeName: contract.freelancer.name,
+                        rating: reviewRating,
+                        content: reviewContent,
+                        categories: { Communication: 4, Quality: 4, Timeliness: 4, Expertise: 4 },
+                      }),
+                    })
+                    setSubmitting(false)
+                    setReviewSubmitted(true)
+                  }} disabled={submitting || !reviewContent.trim()}
+                    className="w-full py-3 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-semibold transition-all disabled:opacity-50">
+                    {submitting ? 'Submitting...' : 'Submit Review'}
+                  </button>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

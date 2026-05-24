@@ -1,35 +1,56 @@
 'use client'
 
-import { useState } from 'react'
-import { Star, ThumbsUp, MessageCircle, Search } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { Star, Search, Loader2 } from 'lucide-react'
 
 type Review = {
-  id: string; author: string; text: string; rating: number; status: 'pending' | 'approved' | 'rejected'; date: string
+  id: string; reviewerName: string; revieweeName: string
+  content: string; rating: number; categories: Record<string, number>
+  status: 'pending' | 'approved' | 'rejected'
+  createdAt: string
 }
 
-const MOCK_REVIEWS: Review[] = [
-  { id: 'r1', author: 'Sarah Johnson', text: 'Excellent platform! Found the perfect developer for my project within days.', rating: 5, status: 'approved', date: '2026-05-15' },
-  { id: 'r2', author: 'Mike Chen', text: 'Great experience. The AI matching saved me hours of searching.', rating: 4, status: 'approved', date: '2026-05-14' },
-  { id: 'r3', author: 'Emma Wilson', text: 'Payment was smooth and secure. Will definitely use again.', rating: 5, status: 'pending', date: '2026-05-13' },
-  { id: 'r4', author: 'Alex Rivera', text: 'Had some issues with communication but support team resolved it quickly.', rating: 3, status: 'pending', date: '2026-05-12' },
-]
-
 export default function ReviewPage() {
-  const [reviews, setReviews] = useState<Review[]>(MOCK_REVIEWS)
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all')
 
+  const fetchReviews = () => {
+    fetch('/api/reviews')
+      .then(r => r.json())
+      .then(d => { setReviews(d); setLoading(false) })
+      .catch(() => setLoading(false))
+  }
+
+  useEffect(() => { fetchReviews() }, [])
+
+  const updateStatus = async (id: string, status: 'approved' | 'rejected') => {
+    await fetch(`/api/reviews`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    })
+    fetchReviews()
+  }
+
   const filtered = reviews.filter(r => {
     if (filter !== 'all' && r.status !== filter) return false
-    if (search && !r.text.toLowerCase().includes(search.toLowerCase()) && !r.author.toLowerCase().includes(search.toLowerCase())) return false
+    if (search && !r.content.toLowerCase().includes(search.toLowerCase()) &&
+        !r.reviewerName.toLowerCase().includes(search.toLowerCase())) return false
     return true
   })
 
-  const updateStatus = (id: string, status: 'approved' | 'rejected') => {
-    setReviews(prev => prev.map(r => r.id === id ? { ...r, status } : r))
-  }
-
   const pending = reviews.filter(r => r.status === 'pending').length
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -67,22 +88,30 @@ export default function ReviewPage() {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-sm font-medium text-white">{review.author}</p>
-                  <div className="flex items-center gap-0.5">
+                  <p className="text-sm font-medium text-white">{review.reviewerName}</p>
+                  <span className="text-xs text-gray-500">→ {review.revieweeName}</span>
+                  <div className="flex items-center gap-0.5 ml-2">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star key={i} className={`w-3 h-3 ${i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-700'}`} />
                     ))}
                   </div>
                 </div>
-                <p className="text-sm text-gray-400">{review.text}</p>
-                <p className="text-xs text-gray-600 mt-2">{review.date}</p>
+                <p className="text-sm text-gray-400">{review.content}</p>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {Object.entries(review.categories || {}).map(([key, val]) => (
+                    <span key={key} className="text-[10px] text-gray-600 capitalize">
+                      {key}: <span className="text-gray-400">{val}/5</span>
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-600 mt-2">{new Date(review.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="flex items-center gap-2 ml-4">
                 {review.status === 'pending' && (
                   <>
                     <button onClick={() => updateStatus(review.id, 'approved')}
                       className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs transition-all">
-                      <ThumbsUp className="w-3 h-3" /> Approve
+                      Approve
                     </button>
                     <button onClick={() => updateStatus(review.id, 'rejected')}
                       className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs transition-all">

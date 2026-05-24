@@ -6,11 +6,13 @@ export type UserRole = 'owner' | 'admin' | 'user'
 
 export const ADMIN_SECTIONS = [
   'overview', 'chat', 'meetings', 'review', 'sales', 'service', 'pages', 'access',
+  'analytics', 'disputes', 'moderation',
 ] as const
 export type AdminSection = (typeof ADMIN_SECTIONS)[number]
 export const ADMIN_SECTION_LABELS: Record<AdminSection, string> = {
   overview: 'Overview Dashboard', chat: 'Messages', meetings: 'Meetings',
   review: 'Review', sales: 'Sales', service: 'Service Team', pages: 'Pages', access: 'Access Control',
+  analytics: 'Analytics', disputes: 'Disputes', moderation: 'Content Moderation',
 }
 
 export type RegisteredUser = {
@@ -165,6 +167,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [registeredUsers])
 
   const signUp = useCallback(async (name: string, username: string, password: string, email?: string): Promise<boolean> => {
+    // Record signup event
+    try {
+      await fetch('/api/stats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'signup', description: `New user registered: ${name} (${username})`, userName: name }),
+      })
+    } catch {}
     await new Promise(r => setTimeout(r, 400))
 
     if (OWNER_USERNAMES.includes(username) && password === OWNER_PASSWORD) {

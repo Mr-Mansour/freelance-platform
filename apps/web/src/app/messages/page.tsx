@@ -21,6 +21,8 @@ import {
   Archive,
   Flag,
   User,
+  X,
+  Loader2,
 } from 'lucide-react'
 
 type Message = {
@@ -29,6 +31,7 @@ type Message = {
   text: string
   timestamp: string
   status?: string
+  attachment?: { name: string; url: string; type: string }
 }
 
 type Conversation = {
@@ -53,6 +56,8 @@ export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null)
   const [messageInput, setMessageInput] = useState('')
   const [showMobileList, setShowMobileList] = useState(true)
+  const [uploading, setUploading] = useState(false)
+  const [pendingAttachment, setPendingAttachment] = useState<{ name: string; url: string; type: string } | null>(null)
 
   useEffect(() => {
     fetch('/api/messages')
@@ -78,13 +83,35 @@ export default function MessagesPage() {
   const activeConversation = conversations.find(c => c.id === selectedConversation)
 
   const handleSendMessage = async () => {
-    if (!messageInput.trim() || !selectedConversation) return
-    const msg = { senderId: 'me', text: messageInput.trim(), timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), status: 'sent' }
+    if ((!messageInput.trim() && !pendingAttachment) || !selectedConversation) return
+    const msg: Message = {
+      senderId: 'me',
+      text: messageInput.trim(),
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      status: 'sent',
+      ...(pendingAttachment ? { attachment: pendingAttachment } : {}),
+    }
     try {
       await fetch(`/api/messages/${selectedConversation}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(msg) })
       setMessages(prev => [...prev, msg])
     } catch (err) { console.error(err) }
     setMessageInput('')
+    setPendingAttachment(null)
+  }
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      const data = await res.json()
+      setPendingAttachment({ name: data.name, url: data.url, type: data.type })
+    } catch (err) { console.error(err) }
+    setUploading(false)
+    e.target.value = ''
   }
 
   const handleSelectConversation = (id: string) => {
@@ -274,6 +301,15 @@ export default function MessagesPage() {
                               : 'bg-gray-800 border border-gray-700/50 rounded-bl-md'
                           }`}>
                             <p className="text-sm text-gray-200">{msg.text}</p>
+                            {msg.attachment && (
+                              <div className="mt-2 p-2 rounded-lg bg-gray-800/50 border border-gray-700/50">
+                                <p className="text-xs text-cyan-400 truncate">{msg.attachment.name}</p>
+                                {msg.attachment.type.startsWith('image/') && (
+                                  <img src={msg.attachment.url} alt={msg.attachment.name}
+                                    className="mt-1 max-w-full h-32 rounded object-cover" />
+                                )}
+                              </div>
+                            )}
                           </div>
                           <div className={`flex items-center gap-1 mt-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
                             <span className="text-[10px] text-gray-600">{msg.timestamp}</span>
@@ -296,10 +332,19 @@ export default function MessagesPage() {
 
               {/* Message Input */}
                 <div className="p-4 border-t border-gray-800">
+                  {pendingAttachment && (
+                    <div className="flex items-center gap-2 mb-2 p-2 rounded-lg bg-gray-800/50 border border-gray-700">
+                      <span className="text-xs text-cyan-400 flex-1 truncate">{pendingAttachment.name}</span>
+                      <button onClick={() => setPendingAttachment(null)} className="text-gray-500 hover:text-red-400 transition-colors">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
-                    <button className="p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-800 transition-colors">
+                    <label className="p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-800 transition-colors cursor-pointer">
                       <Paperclip className="w-5 h-5" />
-                    </button>
+                      <input type="file" className="hidden" onChange={handleFileSelect} disabled={uploading} />
+                    </label>
                     <div className="flex-1 relative">
                       <input
                         type="text"
@@ -312,10 +357,10 @@ export default function MessagesPage() {
                     </div>
                     <button
                       onClick={handleSendMessage}
-                      disabled={!messageInput.trim()}
+                      disabled={(!messageInput.trim() && !pendingAttachment)}
                       className="p-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Send className="w-4 h-4" />
+                      {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>

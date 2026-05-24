@@ -9,12 +9,15 @@ import { useAuth, type AdminSection } from '@/lib/auth-context'
 
 const NAV_ITEMS: { href: string; label: string; icon: string; section: AdminSection }[] = [
   { href: '/admin', label: 'Overview', icon: '◉', section: 'overview' },
+  { href: '/admin/analytics', label: 'Analytics', icon: '📊', section: 'analytics' },
   { href: '/admin/chat', label: 'Messages', icon: '💬', section: 'chat' },
   { href: '/admin/meetings', label: 'Meetings', icon: '📅', section: 'meetings' },
   { href: '/admin/review', label: 'Review', icon: '⭐', section: 'review' },
   { href: '/admin/sales', label: 'Sales', icon: '💰', section: 'sales' },
   { href: '/admin/service', label: 'Service', icon: '🛠️', section: 'service' },
   { href: '/admin/pages', label: 'Pages', icon: '📄', section: 'pages' },
+  { href: '/admin/disputes', label: 'Disputes', icon: '⚖️', section: 'disputes' },
+  { href: '/admin/moderation', label: 'Moderation', icon: '🚩', section: 'moderation' },
   { href: '/admin/access', label: 'Access', icon: '🔐', section: 'access' },
 ]
 
@@ -28,7 +31,6 @@ export default function AdminSidebar() {
   const isOwner = user?.role === 'owner'
   const userSections = user?.sections || []
 
-  // Filter nav items based on user's allowed sections (owners see all)
   const filteredItems = isOwner
     ? NAV_ITEMS
     : NAV_ITEMS.filter(item => userSections.includes(item.section))

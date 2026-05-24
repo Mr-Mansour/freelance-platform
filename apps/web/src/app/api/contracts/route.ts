@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getContracts, addContract } from '@/lib/store'
+import { getContracts, addContract, addPlatformEvent } from '@/lib/store'
 import type { Contract } from '@/lib/store'
 
 export async function GET(request: NextRequest) {
@@ -45,7 +45,16 @@ export async function POST(request: Request) {
     completedMilestones: 0,
     startDate: body.startDate || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     endDate: body.endDate || 'TBD',
+    freelancerId: body.freelancerId,
+    clientId: body.clientId,
   }
   addContract(contract)
+  addPlatformEvent({
+    id: `evt${Date.now()}`,
+    type: 'contract',
+    description: `Contract "${contract.title}" created for $${contract.amount}`,
+    amount: contract.amount,
+    createdAt: new Date().toISOString(),
+  })
   return NextResponse.json(contract, { status: 201 })
 }
