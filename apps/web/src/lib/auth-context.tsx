@@ -71,8 +71,8 @@ const AuthContext = createContext<AuthContextType>({
   addManagedUser: () => {}, removeManagedUser: () => {}, updateManagedUser: () => {}, makeOwner: () => {},
 })
 
-const OWNER_USERNAMES = ['Qan', 'owner']
-const OWNER_PASSWORD = 'TachOWNER159357'
+const OWNER_USERNAMES = ['OWNERADMIN', 'owner']
+const OWNER_PASSWORD = 'TechOWNERadmin124578963'
 
 function getInitials(name: string): string {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -120,8 +120,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (OWNER_USERNAMES.includes(username) && password === OWNER_PASSWORD) {
       const owner: User = {
-        id: 'owner', name: 'Qan', username: 'Qan',
-        avatar: null, title: 'Founder & CEO', initials: 'QN',
+        id: 'owner', name: username, username,
+        avatar: null, title: 'Founder & CEO', initials: getInitials(username),
         role: 'owner', position: 'Founder & CEO of CYBRION',
         sections: [...ADMIN_SECTIONS],
       }
@@ -179,8 +179,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (OWNER_USERNAMES.includes(username) && password === OWNER_PASSWORD) {
       const owner: User = {
-        id: 'owner', name: 'Qan', username: 'Qan',
-        avatar: null, title: 'Founder & CEO', initials: 'QN',
+        id: 'owner', name: username, username,
+        avatar: null, title: 'Founder & CEO', initials: getInitials(username),
         role: 'owner', position: 'Founder & CEO of CYBRION',
         sections: [...ADMIN_SECTIONS],
       }

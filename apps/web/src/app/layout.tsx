@@ -3,6 +3,7 @@ import { Providers } from './providers'
 import { AuthProvider } from '@/lib/auth-context'
 import { PostHogProvider } from './analytics-provider'
 import Navbar from '@/components/Navbar'
+import SeedDefaultPages from '@/components/SeedDefaultPages'
 import './globals.css'
 
 export const dynamic = 'force-dynamic'
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-black text-gray-100 antialiased">
         <PostHogProvider>
           <AuthProvider>
+            <SeedDefaultPages />
             <Navbar />
             <main className="pt-16 lg:pt-20">{children}</main>
           </AuthProvider>

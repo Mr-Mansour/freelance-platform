@@ -127,11 +127,19 @@ const plans = [
   },
 ]
 
-const footerLinks = {
-  platform: ['Browse Jobs', 'Browse Freelancers', 'Categories', 'How It Works', 'Trust & Safety'],
-  company: ['About Us', 'Careers', 'Blog', 'Press Kit', 'Contact'],
-  resources: ['Help Center', 'Community', 'Tutorials', 'API Docs', 'Status'],
-  legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'GDPR', 'DPA'],
+const LEGAL_SLUGS: Record<string, string> = {
+  'Privacy Policy': '/p/privacy-policy',
+  'Terms of Service': '/p/terms-of-service',
+  'Cookie Policy': '/p/cookie-policy',
+  'GDPR': '/p/gdpr',
+  'DPA': '/p/dpa',
+}
+
+const footerLinks: Record<string, ({ label: string; href: string })[]> = {
+  platform: ['Browse Jobs', 'Browse Freelancers', 'Categories', 'How It Works', 'Trust & Safety'].map(l => ({ label: l, href: '#' })),
+  company: ['About Us', 'Careers', 'Blog', 'Press Kit', 'Contact'].map(l => ({ label: l, href: '#' })),
+  resources: ['Help Center', 'Community', 'Tutorials', 'API Docs', 'Status'].map(l => ({ label: l, href: '#' })),
+  legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'GDPR', 'DPA'].map(l => ({ label: l, href: LEGAL_SLUGS[l] || '#' })),
 }
 
 function HeroSection() {
@@ -563,9 +571,9 @@ function Footer() {
               </h4>
               <ul className="space-y-3">
                 {links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-                      {link}
+                  <li key={link.label}>
+                    <a href={link.href} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
+                      {link.label}
                     </a>
                   </li>
                 ))}

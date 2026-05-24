@@ -25,6 +25,24 @@ import {
 import { useAuth } from '@/lib/auth-context'
 import Logo from './Logo'
 
+const ROLE_SUGGESTIONS = [
+  { title: 'Web Developer', description: 'Build websites, web apps, and APIs using modern frameworks.', help: 'Offer custom development services, from landing pages to full-stack SaaS platforms.' },
+  { title: 'Mobile Developer', description: 'Create iOS and Android apps with native or cross-platform tools.', help: 'Build mobile apps for clients — e-commerce, social, productivity, or games.' },
+  { title: 'UI/UX Designer', description: 'Design intuitive interfaces and seamless user experiences.', help: 'Create wireframes, prototypes, and design systems for startups and agencies.' },
+  { title: 'AI/ML Engineer', description: 'Develop machine learning models and AI-powered solutions.', help: 'Provide AI consulting, model training, chatbot development, and data analysis.' },
+  { title: 'DevOps Engineer', description: 'Manage infrastructure, CI/CD pipelines, and cloud deployments.', help: 'Help clients automate deployments, optimize cloud costs, and improve reliability.' },
+  { title: 'Data Scientist', description: 'Analyze data, build dashboards, and derive actionable insights.', help: 'Offer data analysis, visualization, and predictive modeling for business decisions.' },
+  { title: 'Content Writer', description: 'Write articles, blog posts, copy, and marketing content.', help: 'Create SEO-optimized content, whitepapers, and brand stories for businesses.' },
+  { title: 'Graphic Designer', description: 'Design logos, branding, social media graphics, and more.', help: 'Deliver visual identity packages, marketing materials, and custom illustrations.' },
+  { title: 'Digital Marketer', description: 'Run campaigns, manage SEO, social media, and paid ads.', help: 'Help businesses grow online presence through targeted marketing strategies.' },
+  { title: 'Video Editor', description: 'Edit and produce professional video content for any platform.', help: 'Create explainer videos, social reels, commercials, and YouTube content.' },
+  { title: 'Virtual Assistant', description: 'Handle administrative tasks, scheduling, and email management.', help: 'Provide remote support to entrepreneurs and busy executives worldwide.' },
+  { title: 'Project Manager', description: 'Plan, execute, and deliver projects on time and within budget.', help: 'Manage client projects end-to-end using agile methodologies and clear communication.' },
+  { title: 'Blockchain Developer', description: 'Build smart contracts, dApps, and blockchain-based solutions.', help: 'Develop NFT marketplaces, DeFi protocols, and tokenization platforms for clients.' },
+  { title: 'Cybersecurity Expert', description: 'Protect systems, networks, and data from security threats.', help: 'Offer penetration testing, security audits, and compliance consulting services.' },
+  { title: 'Copywriter', description: 'Write persuasive copy for ads, emails, landing pages, and sales funnels.', help: 'Help businesses convert visitors into customers with compelling copy.' },
+]
+
 const APP_LINKS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/jobs', label: 'Find Work', icon: Briefcase },
@@ -48,6 +66,7 @@ export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [pathname, setPathname] = useState('/')
   const [unreadNotifs, setUnreadNotifs] = useState(0)
+  const [showRoleSuggestions, setShowRoleSuggestions] = useState(false)
   const userMenuRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLDivElement>(null)
 
@@ -70,6 +89,7 @@ export default function Navbar() {
       }
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setSearchOpen(false)
+        setShowRoleSuggestions(false)
       }
     }
     window.addEventListener('scroll', onScroll)
@@ -87,6 +107,7 @@ export default function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (!searchQuery.trim()) return
+    setShowRoleSuggestions(false)
     window.location.href = `/marketplace?search=${encodeURIComponent(searchQuery)}`
     setSearchQuery('')
     setSearchOpen(false)
@@ -193,23 +214,58 @@ export default function Navbar() {
                   <motion.form
                     key="search-input"
                     initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 240, opacity: 1 }}
+                    animate={{ width: 320, opacity: 1 }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                     onSubmit={handleSearch}
-                    className="flex items-center"
+                    className="relative"
                   >
                     <div className="relative w-full">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                       <input
                         type="text"
-                        placeholder={isLanding ? "Search freelancers, jobs..." : "Search..."}
+                        placeholder="Search roles, freelancers, jobs..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value)
+                          setShowRoleSuggestions(e.target.value.length > 0)
+                        }}
+                        onFocus={() => setShowRoleSuggestions(searchQuery.length > 0)}
                         autoFocus
                         className="w-full pl-9 pr-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
                       />
                     </div>
+                    {showRoleSuggestions && searchQuery.trim() && (
+                      <div className="absolute top-full mt-2 left-0 w-full max-h-80 overflow-y-auto rounded-xl border border-gray-800 bg-gray-900 shadow-2xl z-50">
+                        {ROLE_SUGGESTIONS.filter(r =>
+                          r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          r.description.toLowerCase().includes(searchQuery.toLowerCase())
+                        ).length > 0 ? (
+                          ROLE_SUGGESTIONS.filter(r =>
+                            r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            r.description.toLowerCase().includes(searchQuery.toLowerCase())
+                          ).slice(0, 8).map((role) => (
+                            <button
+                              key={role.title}
+                              type="button"
+                              onClick={() => {
+                                setShowRoleSuggestions(false)
+                                setSearchOpen(false)
+                                setSearchQuery('')
+                                window.location.href = `/marketplace?search=${encodeURIComponent(role.title)}`
+                              }}
+                              className="w-full text-left px-4 py-3 hover:bg-gray-800 border-b border-gray-800 last:border-b-0 transition-colors"
+                            >
+                              <p className="text-sm font-medium text-white">{role.title}</p>
+                              <p className="text-xs text-gray-400 mt-0.5">{role.description}</p>
+                              <p className="text-xs text-cyan-400 mt-0.5">{role.help}</p>
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-4 py-3 text-sm text-gray-500">No matching roles found. Press Enter to search all freelancers.</div>
+                        )}
+                      </div>
+                    )}
                   </motion.form>
                 ) : (
                   <motion.button
@@ -336,16 +392,46 @@ export default function Navbar() {
           >
             <div className="px-4 py-6 space-y-4">
               {/* Mobile Search */}
-              <form onSubmit={handleSearch} className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input
-                  type="text"
-                  placeholder="Search freelancers, jobs..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-900 border border-gray-800 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-cyan-500/50"
-                />
-              </form>
+              <div className="relative">
+                <form onSubmit={handleSearch} className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                  <input
+                    type="text"
+                    placeholder="Search roles, freelancers, jobs..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value)
+                      setShowRoleSuggestions(e.target.value.length > 0)
+                    }}
+                    onFocus={() => setShowRoleSuggestions(searchQuery.length > 0)}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-900 border border-gray-800 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-cyan-500/50"
+                  />
+                </form>
+                {showRoleSuggestions && searchQuery.trim() && (
+                  <div className="mt-1 rounded-xl border border-gray-800 bg-gray-900 shadow-2xl overflow-hidden">
+                    {ROLE_SUGGESTIONS.filter(r =>
+                      r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      r.description.toLowerCase().includes(searchQuery.toLowerCase())
+                    ).slice(0, 6).map((role) => (
+                      <button
+                        key={role.title}
+                        type="button"
+                        onClick={() => {
+                          setShowRoleSuggestions(false)
+                          setShowMobileMenu(false)
+                          setSearchQuery('')
+                          window.location.href = `/marketplace?search=${encodeURIComponent(role.title)}`
+                        }}
+                        className="w-full text-left px-4 py-3 hover:bg-gray-800 border-b border-gray-800 last:border-b-0 transition-colors"
+                      >
+                        <p className="text-sm font-medium text-white">{role.title}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{role.description}</p>
+                        <p className="text-xs text-cyan-400 mt-0.5">{role.help}</p>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               {renderMobileLinks()}
             </div>
