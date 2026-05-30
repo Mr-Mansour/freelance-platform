@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bot, Sparkles, Plus, Settings, Trash2, Edit3, User, MessageCircle, Check, Loader2, Globe, Zap, Crown, Smile, Shield } from 'lucide-react'
+import { Bot, Sparkles, Plus, Settings, Trash2, Edit3, User, MessageCircle, Check, Loader2, Globe, Zap, Crown, Smile, Shield, Send, X } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 
 export type AIBot = {
