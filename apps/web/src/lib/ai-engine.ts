@@ -271,7 +271,7 @@ export function getSupportResponses(): Record<string, { response: string; action
   }
 }
 
-export function findSupportMatch(query: string): { intent: string; response: string; actions?: any[] } | null {
+export function findSupportMatch(query: string): { intent: string; response: string; actions?: any[] } {
   const lower = query.toLowerCase()
   const responses = getSupportResponses()
 
