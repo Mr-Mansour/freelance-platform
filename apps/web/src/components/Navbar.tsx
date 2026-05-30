@@ -21,6 +21,7 @@ import {
   Info,
   DollarSign,
   Crown,
+  Bot,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import Logo from './Logo'
@@ -47,13 +48,16 @@ const APP_LINKS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/jobs', label: 'Find Work', icon: Briefcase },
   { href: '/freelancers', label: 'Freelancers', icon: User },
+  { href: '/ai-match', label: 'AI Match', icon: Sparkles },
   { href: '/messages', label: 'Messages', icon: MessageCircle },
   { href: '/proposals', label: 'Proposals', icon: FileText },
+  { href: '/my-ai', label: 'My AI', icon: Bot },
 ]
 
 const LANDING_LINKS = [
   { href: '/freelancers', label: 'Find Freelancers', icon: User },
   { href: '/jobs', label: 'Browse Jobs', icon: Briefcase },
+  { href: '/ai-match', label: 'AI Match', icon: Sparkles },
   { href: '/how-it-works', label: 'How It Works', icon: Info },
 ]
 

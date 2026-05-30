@@ -4,6 +4,8 @@ import { AuthProvider } from '@/lib/auth-context'
 import { PostHogProvider } from './analytics-provider'
 import Navbar from '@/components/Navbar'
 import SeedDefaultPages from '@/components/SeedDefaultPages'
+import AIChatButton from '@/components/AIChatButton'
+import SupportChat from '@/components/SupportChat'
 import './globals.css'
 
 export const dynamic = 'force-dynamic'
@@ -42,6 +44,8 @@ export default function RootLayout({
             <SeedDefaultPages />
             <Navbar />
             <main className="pt-16 lg:pt-20">{children}</main>
+            <AIChatButton />
+            <SupportChat />
           </AuthProvider>
         </PostHogProvider>
       </body>

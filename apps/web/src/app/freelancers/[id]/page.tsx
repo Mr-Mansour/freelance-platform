@@ -22,6 +22,10 @@ import {
   Bookmark,
   Share2,
   Flag,
+  Bot,
+  Send,
+  X,
+  User,
 } from 'lucide-react'
 
 const TRUST_LEVEL_STYLES: Record<string, { label: string; color: string; bg: string; border: string }> = {
@@ -109,7 +113,7 @@ export default function FreelancerProfilePage() {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-500 text-lg">Freelancer not found</p>
-          <a href="/marketplace" className="text-cyan-400 text-sm mt-2 inline-block hover:text-cyan-300">Back to marketplace</a>
+          <a href="/freelancers" className="text-cyan-400 text-sm mt-2 inline-block hover:text-cyan-300">Back to marketplace</a>
         </div>
       </div>
     )
@@ -117,13 +121,41 @@ export default function FreelancerProfilePage() {
 
   const trust = TRUST_LEVEL_STYLES[freelancer.trustLevel]
 
+  // AI Bot integration
+  const [botChatOpen, setBotChatOpen] = useState(false)
+  const [botMessages, setBotMessages] = useState<{ role: string; text: string }[]>([])
+  const [botInput, setBotInput] = useState('')
+  const freelancerBot = (() => {
+    try {
+      const bots = JSON.parse(localStorage.getItem('cybrion_ai_bots') || '[]')
+      return bots.find((b: any) => b.userId === freelancer.id || b.name.toLowerCase().includes(freelancer.name.split(' ')[0].toLowerCase()))
+    } catch { return null }
+  })()
+
+  const handleBotChat = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!botInput.trim() || !freelancerBot) return
+    const userMsg = botInput.trim()
+    setBotMessages(prev => [...prev, { role: 'user', text: userMsg }])
+    setBotInput('')
+    setTimeout(() => {
+      const responses: string[] = [
+        `Thank you for your interest! Based on my experience as ${freelancer.title}, I believe I can help with your project.`,
+        `Great question! I have extensive experience in ${freelancer.skills?.slice(0, 3).join(', ') || 'this area'}. Let me share more details.`,
+        `I've completed ${freelancer.completedJobs} similar projects with a ${freelancer.jobSuccessRate}% success rate. I'd be happy to discuss your requirements.`,
+        `My rate is $${freelancer.hourlyRate}/hr and I'm ${freelancer.available ? 'available now' : 'currently busy but can discuss timelines'}.`,
+      ]
+      setBotMessages(prev => [...prev, { role: 'ai', text: responses[Math.floor(Math.random() * responses.length)] }])
+    }, 600)
+  }
+
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         <motion.a
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          href="/marketplace"
+          href="/freelancers"
           className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-300 mb-8 transition-colors"
         >
           <ChevronRight className="w-4 h-4 rotate-180" />
@@ -352,6 +384,30 @@ export default function FreelancerProfilePage() {
                 </p>
               </div>
 
+              {/* AI Bot Chat */}
+              {freelancerBot && (
+                <div className="p-6 rounded-2xl border border-purple-500/20 bg-purple-600/5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-purple-400">{freelancerBot.name}</span>
+                      <p className="text-xs text-gray-500">AI Assistant</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-400 mb-3 leading-relaxed">
+                    {freelancerBot.welcomeMessage || `Hi! I'm ${freelancerBot.name}, ${freelancer.name}'s AI assistant. Ask me anything!`}
+                  </p>
+                  <button
+                    onClick={() => { setBotChatOpen(true); setBotMessages([{ role: 'ai', text: freelancerBot.welcomeMessage || `Hi! I'm ${freelancerBot.name}. How can I help you?` }]) }}
+                    className="w-full py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-600 text-white text-sm font-medium hover:opacity-90 transition-all"
+                  >
+                    <MessageCircle className="w-4 h-4 inline mr-2" />
+                    Chat with AI
+                  </button>
+                </div>
+              )}
               {/* Trust Score */}
               <div className="p-6 rounded-2xl border border-gray-800 bg-gray-900/50">
                 <div className="flex items-center justify-between mb-4">
@@ -439,6 +495,71 @@ export default function FreelancerProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* AI Bot Chat Modal */}
+      {botChatOpen && freelancerBot && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setBotChatOpen(false)}>
+          <div className="w-full max-w-md rounded-2xl border border-gray-700 bg-gray-900 shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-4 border-b border-gray-800">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-white">{freelancerBot.name}</p>
+                  <p className="text-xs text-purple-400">{freelancer.name}&apos;s AI Assistant</p>
+                </div>
+              </div>
+              <button onClick={() => setBotChatOpen(false)} className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="h-72 overflow-y-auto p-4 space-y-3">
+              {botMessages.map((msg, i) => (
+                <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                  {msg.role === 'ai' ? (
+                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center flex-shrink-0">
+                      <Bot className="w-3.5 h-3.5 text-white" />
+                    </div>
+                  ) : (
+                    <div className="w-7 h-7 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
+                      <User className="w-3.5 h-3.5 text-gray-300" />
+                    </div>
+                  )}
+                  <div className={`max-w-[80%]`}>
+                    <div className={`rounded-2xl px-3 py-2 ${
+                      msg.role === 'user'
+                        ? 'bg-purple-600 text-white rounded-tr-sm'
+                        : 'bg-gray-800 text-gray-200 rounded-tl-sm'
+                    }`}>
+                      <p className="text-sm">{msg.text}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div ref={(el) => el?.scrollIntoView({ behavior: 'smooth' })} />
+            </div>
+            <div className="p-4 border-t border-gray-800">
+              <form onSubmit={handleBotChat} className="flex gap-2">
+                <input
+                  type="text"
+                  value={botInput}
+                  onChange={(e) => setBotInput(e.target.value)}
+                  placeholder="Ask about services, pricing, availability..."
+                  className="flex-1 px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500/50"
+                />
+                <button
+                  type="submit"
+                  disabled={!botInput.trim()}
+                  className="px-3 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-600 text-white text-sm hover:opacity-90 transition-all disabled:opacity-50"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
