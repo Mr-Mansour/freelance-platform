@@ -35,6 +35,8 @@ export interface Freelancer {
   trustLevel: string; jobSuccessRate: number; location: string
   skills: string[]; verifiedBadges: string[]; completedJobs: number
   totalEarned: number; available: boolean
+  username?: string; languages?: string[]; aiMatchScore?: number
+  responseTime?: string; trustScore?: number
 }
 
 export interface Job {
