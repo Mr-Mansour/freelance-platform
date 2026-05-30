@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from 'react'
 import { notFound } from 'next/navigation'
 import Logo from '@/components/Logo'
+import LEDLightBar from '@/components/LEDLightBar'
 
 type CustomPage = {
   id: string; title: string; slug: string; content: string; published: boolean
@@ -33,6 +34,9 @@ export default function CustomPage({ params }: { params: Promise<{ slug: string 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <Logo size="sm" />
+        </div>
+        <div className="mb-6">
+          <LEDLightBar color="cyan" />
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-8">{page.title}</h1>
         <div

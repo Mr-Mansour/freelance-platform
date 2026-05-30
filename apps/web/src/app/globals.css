@@ -50,3 +50,9 @@
     scrollbar-width: none;
   }
 }
+
+@keyframes slide {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(400%); }
+  100% { transform: translateX(-100%); }
+}

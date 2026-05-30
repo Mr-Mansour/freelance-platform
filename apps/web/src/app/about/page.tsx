@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Users, Target, Eye, Shield, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import LEDLightBar from '@/components/LEDLightBar'
 
 const values = [
   { icon: Target, title: 'Our Mission', desc: 'To empower businesses and freelancers worldwide by providing an AI-powered platform that makes hiring and collaboration seamless, efficient, and transparent.' },
@@ -14,6 +15,9 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="mb-6">
+          <LEDLightBar color="cyan" />
+        </div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">About Cybrion</h1>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">The next-generation freelance marketplace powered by artificial intelligence.</p>

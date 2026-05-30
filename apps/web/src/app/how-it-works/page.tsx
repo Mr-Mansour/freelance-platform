@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Search, UserCheck, CreditCard, MessageCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import LEDLightBar from '@/components/LEDLightBar'
 
 const steps = [
   { icon: Search, title: '1. Post a Job', desc: 'Tell us what you need done. Describe your project and set your budget. Our AI helps match you with the right freelancers.' },
@@ -15,6 +16,9 @@ export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="mb-6">
+          <LEDLightBar color="purple" />
+        </div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">How It Works</h1>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">Get started in four simple steps. Whether you are hiring or freelancing, Cybrion makes it easy.</p>

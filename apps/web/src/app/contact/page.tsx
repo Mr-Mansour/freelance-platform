@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, MessageCircle, MapPin, Send, Check } from 'lucide-react'
+import LEDLightBar from '@/components/LEDLightBar'
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false)
@@ -15,6 +16,9 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="mb-6">
+          <LEDLightBar color="blue" />
+        </div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">Contact Us</h1>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">Have a question or need help? We are here for you.</p>
